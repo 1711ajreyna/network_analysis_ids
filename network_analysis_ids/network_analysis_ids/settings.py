@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
+import tempfile
+
+# sets a temporary directory for file uploads
+FILE_UPLOAD_TEMP_DIR = tempfile.mkdtemp()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -130,6 +134,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PCAP_FILES_DIR = os.path.join(BASE_DIR, 'traffic_analysis', 'pcap_files')
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER ='json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'
 
 # Ensure the directory exist
 if not os.path.exists(PCAP_FILES_DIR):

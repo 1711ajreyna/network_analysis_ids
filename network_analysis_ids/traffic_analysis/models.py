@@ -6,3 +6,7 @@ class PcapFile(models.Model):
 
     def __str__(self):
         return self.file.name
+    
+class AnalysisResult(models.Model):
+    pcap_file = models.OneToOneField(PcapFile, on_delete=models.CASCADE)
+    packets = models.JSONField()  
