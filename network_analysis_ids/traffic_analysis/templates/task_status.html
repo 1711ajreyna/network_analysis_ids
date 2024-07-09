@@ -6,6 +6,6 @@
 <h1>Task Status</h1>
 <p>Status: {{ task.state }}</p>
 {% if task.state == 'SUCCESS' %}
-<p>Analysis Complete. <a href="{% url 'results' pcap_file_id=task.result %}">View Results</a></p>
+<p>Analysis Complete. <a href="{% url 'results' pcap_file_id=pcap_file.id %}">View Results</a></p>
 {% endif %}
 {% endblock content %}

@@ -3,6 +3,7 @@ from .forms import PcapFileForm
 from .models import PcapFile
 from .tasks import analyze_pcap_file
 from celery.result import AsyncResult
+from django.urls import reverse
 
 def upload_file(request):
     if request.method == 'POST':
@@ -18,7 +19,8 @@ def upload_file(request):
 def task_status(request, task_id):
     task = AsyncResult(task_id)
     if task.state == 'SUCCESS':
-        return redirect('results', pcap_file_id=task.result)
+        pcap_file_id = task.result['pcap_file_id']
+        return redirect(reverse('results', kwrargs={'pcap_file_id': pcap_file_id}))
     return render(request, 'task_status.html', {'task': task})
 
 def analyze_traffic(request, pcap_file_id):
