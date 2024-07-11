@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from traffic_analysis.forms import PcapFileForm
-from traffic_analysis.models import PcapFile
+from traffic_analysis.models import PcapFile, NetworkPacket
 from traffic_analysis.tasks import analyze_pcap_file
 from celery.result import AsyncResult
 
@@ -12,11 +12,10 @@ def upload_view(request):
     form = PcapFileForm()
     return render(request, 'upload.html', {'form':form})
 
-def results_view(request, task_id):
+def results_view(request, pcap_file_id):
     pcap_file = PcapFile.objects.get(id=pcap_file_id)
-    file_path = pcap_file.file.path
-    packets = analyze_pcap_file(file_path)
-    return render(request, 'results.html', {'packets': packets})
+    packets = NetworkPacket.objects.filter(pcap_file_id=pcap_file_id)
+    return render(request, 'results.html', {'pcapfile':pcap_file, 'packets': packets})
 
 def upload_file(request):
     if request.method == 'POST':

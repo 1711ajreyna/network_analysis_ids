@@ -1,12 +1,16 @@
 from scapy.all import rdpcap
 
-# read_pcap will read and extract information from a layer
-# of a packet that has layers
-
 def read_pcap(file_path):
-    packets = rdpcap(file_path)
+    try:
+        packets = rdpcap(file_path)
+    except Exception as e:
+        # Log the exception and return empty results
+        print(f"Error reading pcap file '{file_path}': {e}")
+        return [], []
+
     packet_details = []
     alerts = []
+
     for packet in packets:
         if packet.haslayer('IP'):
             details = {
@@ -18,12 +22,15 @@ def read_pcap(file_path):
             }
             packet_details.append(details)
 
-            # Initilize alerts
             # Example IDS Rules
             if packet['IP'].src == '192.168.1.1':
                 alerts.append(f"Suspicious activity detected from {packet['IP'].src}")
             if packet['IP'].proto == 6 and packet.sport == 23:
                 alerts.append(f"Telnet traffic detected from {packet['IP'].src} to {packet['IP'].dst}")
-    
+
+    if not packet_details and not alerts:
+        print(f"No packet details or alerts found in pcap file '{file_path}'")
+
     return packet_details, alerts
+
 

@@ -1,11 +1,16 @@
 {% extends 'base.html' %}
 
-{% block title %}Task Status{% endblock title %}
+{% block title %}Task Status{% endblock %}
+
+{% load static %}
 
 {% block content %}
 <h1>Task Status</h1>
-<p>Status: {{ task.state }}</p>
+<p>Task ID: {{ task.id }}</p>
+<p>Task State: {{ task.state }}</p>
 {% if task.state == 'SUCCESS' %}
-<p>Analysis Complete. <a href="{% url 'results' pcap_file_id=pcap_file.id %}">View Results</a></p>
+    <p>Task Result: {{ task.result }}</p>
+{% elif task.state == 'FAILURE' %}
+    <P>Task Failed: {{ task.info }}</P>
 {% endif %}
-{% endblock content %}
+{% endblock %}

@@ -7,5 +7,9 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'network_analysis_ids.settings')
 
 app = Celery('network_analysis_ids')
 app.config_from_object('django.conf:settings', namespace='CELERY')
-app.conf.broker_url = 'redis://localhost:6379/0'
 app.autodiscover_tasks()
+app.conf.update(
+    broker_url='redis://localhost:6379/0',
+    result_backend='redis://localhost:6379/0',
+    broker_connection_retry_on_startup=True,
+)
